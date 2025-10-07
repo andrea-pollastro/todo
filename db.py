@@ -80,6 +80,7 @@ class Database:
 
     def create(self):
         with self.connection:
+            print('test')
             ...
     
     def read(self):
