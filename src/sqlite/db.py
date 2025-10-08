@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 import sqlite3
 import logging
 
-from .utils import InRecord, OutRecord
+from .utils import InRecord, DBRecord, Priority, Status
 
 logger = logging.getLogger(__name__)
 
@@ -74,17 +74,18 @@ class Database:
         )
         logger.info("Database schema ready")
     
-    def insert(self, record: InRecord) -> None:
+    def insert_task(self, record: InRecord) -> Optional[int]:
         delivered_to_id: Optional[int] = None
 
         if record.delivered_to and record.delivered_to.strip():
             delivered_to_id = self._insert_organization(record.delivered_to)
         
         with self._connection:
-            self._connection.execute(
+            cur = self._connection.execute(
                 """
                 INSERT INTO tasks(status, title, priority, due_date, comment, delivered_to)
                 VALUES(?, ?, ?, ?, ?, ?)
+                RETURNING *
                 """,
                 (
                     record.status.value,
@@ -95,14 +96,16 @@ class Database:
                     delivered_to_id
                 )
             )
-        logger.info("Inserted task '%s' (status=%s, priority=%s, delivered_to_id=%s)",
-                    record.title, record.status.name, record.priority.name, delivered_to_id)
+            row = cur.fetchone()
+        logger.info("Inserted task '%s' (id=%d, delivered_to(FK)=%s, created_at=%d, updated_at=%d)",
+                    record.title, row['id'], delivered_to_id, row['created_at'], row['updated_at'])
+        return cur.lastrowid
     
-    def retrieve_db(self):
+    def get_all_tasks(self) -> List[DBRecord]:
         logger.debug("Retrieving all tasks")
         rows = self._connection.execute("SELECT * FROM tasks").fetchall()
         logger.info("Retrieved %d tasks", len(rows))
-        return rows
+        return [DBRecord(**dict(r)) for r in rows]
 
     def update(self):
         raise NotImplementedError('Not implemented yet')
@@ -147,10 +150,10 @@ class Database:
         logger.debug("Lookup organization '%s' -> id=%s", name, organization_id)
         return organization_id
 
-    def _resolve_db_path(self, db_name: str, dev: bool) -> Tuple[Optional[str], str]:
+    def _resolve_db_path(self, db_name: str, dev: bool) -> Tuple[Optional[str], Path]:
         if dev:
             logger.info("Using in-memory database (development mode)")
-            return None, ":memory:"
+            return None, Path(":memory:")
 
         if not db_name or not db_name.strip():
             logger.error("Invalid db_name provided: %s", db_name)
@@ -163,4 +166,4 @@ class Database:
         db_path.parent.mkdir(parents=True, exist_ok=True)
 
         logger.debug("Resolved database path: %s", db_path)
-        return db_name, str(db_path)
+        return db_name, db_path

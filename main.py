@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from src.sqlite.db import Database
 from src.sqlite.utils import InRecord, Status, Priority
-from pprint import pprint
+from src.log.utils import set_logger
 import logging
 import time
 
-logging.basicConfig(level=logging.INFO)
+set_logger(level=logging.INFO)
 
 if __name__ == '__main__':
     db = Database(dev=True, db_name='test')
@@ -20,6 +20,9 @@ if __name__ == '__main__':
         comment='',
         delivered_to=' piergiorgio  andrei  '
     )
-    db.insert(record)
-    records = db.retrieve_db()
+    for i in range(5):
+        db.insert_task(record)
+    records = db.get_all_tasks()
+    # for r in records:
+    #     print(r)
     db.close_connection()

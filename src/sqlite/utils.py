@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 from dataclasses import dataclass
+import sqlite3
 
 @dataclass(slots=True)
 class InRecord:
@@ -13,10 +14,16 @@ class InRecord:
     delivered_to: str
 
 @dataclass(slots=True)
-class OutRecord(InRecord):
+class DBRecord(InRecord):
     id: int
     created_at: int
     updated_at: int
+
+    def __post_init__(self):
+        if not isinstance(self.status, Status):
+            self.status = Status(self.status)
+        if not isinstance(self.priority, Priority):
+            self.priority = Priority(self.priority)
 
 class Priority(Enum):
     LOW = 0
