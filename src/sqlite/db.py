@@ -37,7 +37,7 @@ class Database:
         logger.debug("Creating database schema if not exists...")
         self._connection.executescript(
             """
-            CREATE TABLE organizations(
+            CREATE TABLE IF NOT EXISTS organizations(
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL UNIQUE
             );
