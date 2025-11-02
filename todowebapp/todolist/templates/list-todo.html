@@ -11,8 +11,18 @@
       <tbody>
         {% for task in tasks %}
         <tr>
-          <td class="text-center">{{ task.get_status_display }}</td>
+          <td class="text-center" style="color: dodgerblue">
+            {% if task.status == 0 %}
+            <i class="bi bi-square"></i>
+            {% elif task.status == 1 %}
+            <i class="bi bi-square-half"></i>
+            {% elif task.status == 2 %}
+            <i class="bi bi-square-fill"></i>
+            {% endif %}
+          </td>
+          
           <td>{{ task.title }}</td>
+          
           <td class="text-center">
             {% if task.priority == 0 %}
               <span class="badge text-bg-green" style="background-color: green;">{{ task.get_priority_display }}</span>
@@ -26,6 +36,7 @@
               {{ task.get_priority_display }}
             {% endif %}
           </td>
+
           <td>{{ task.due_date }}</td>
           <td>{{ task.comment }}</td>
           <td>{{ task.delivered_to.name }}</td>
