@@ -1,0 +1,20 @@
+{% extends "master.html" %}
+{% block content %}
+<div class="container my-4">
+  <h2 class="mb-3">New Task</h2>
+  <form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <div class="mt-3 d-flex gap-2">
+      <button type="submit" class="btn btn-success">
+        <i class="bi bi-check-circle"></i> Save
+      </button>
+      <a href="{% url 'get_all_tasks' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Cancel
+      </a>
+    </div>
+    
+  </form>
+</div>
+{% endblock %}

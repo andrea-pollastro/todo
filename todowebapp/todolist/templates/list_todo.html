@@ -37,9 +37,9 @@
             {% endif %}
           </td>
 
-          <td>{{ task.due_date }}</td>
-          <td>{{ task.comment }}</td>
-          <td>{{ task.delivered_to.name }}</td>
+          <td>{{ task.due_date|default:"—" }}</td>
+          <td>{{ task.comment|default:"—" }}</td>
+          <td>{{ task.delivered_to|default:"—" }}</td>
           <td>{{ task.created_at }}</td>
           <td>{{ task.updated_at }}</td>
         </tr>
@@ -47,7 +47,7 @@
         
         <tr class="table">
           <td colspan="{{ fields|length }}" class="text-center">
-            <a class="btn"> <!-- add href here -->
+            <a href="{% url 'add_task' %}" class="btn"> <!-- add href here -->
               <i class="bi bi-plus-circle"></i> Add new task
             </a>
           </td>

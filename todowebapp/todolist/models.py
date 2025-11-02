@@ -29,10 +29,9 @@ class Task(models.Model):
     due_date = models.DateField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     
-    delivered_to = models.ForeignKey(
-        to=Organization, 
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True)
+    delivered_to = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
