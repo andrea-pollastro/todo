@@ -47,29 +47,45 @@
         
         <tr class="table">
           <td colspan="{{ fields|length }}" class="text-center">
-            <a class="btn" data-bs-toggle="collapse" href="#newTaskForm" role="button" aria-expanded="false" aria-controls="newTaskForm">
+            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#newTaskModal">
               <i class="bi bi-plus-circle"></i> Add new task
-            </a>
+            </button>
           </td>
         </tr>
         
       </tbody>
     </table>
 
-    <div class="collapse mt-3" id="newTaskForm">
-      <form method="post" class="border rounded p-3 bg-light" style="max-width: 500px; margin: 0 auto; font-size: 0.9rem;">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="mt-2 d-flex justify-content-center gap-2">
-          <button type="submit" class="btn btn-success btn-sm">
-            <i class="bi bi-check-circle"></i> Save
-          </button>
-          <a href="{% url 'get_all_tasks' %}" class="btn btn-secondary btn-sm">
-            <i class="bi bi-x-circle"></i> Cancel
-          </a>
+    <!-- Modal -->
+    <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border rounded p-2 bg-light" style="font-size: 0.9rem;">
+          
+          <div class="modal-header">
+            <h5 class="modal-title" id="newTaskModalLabel">New Task</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <form method="post">
+            <div class="modal-body">
+              {% csrf_token %}
+              {{ form.as_p }}
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center">
+              <button type="submit" class="btn btn-success btn-sm">
+                <i class="bi bi-check-circle"></i> Save
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                <i class="bi bi-x-circle"></i> Cancel
+              </button>
+            </div>
+          </form>
+
         </div>
-      </form>
+      </div>
     </div>
+
 
 {% endblock %}
 {% block css %}
