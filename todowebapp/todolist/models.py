@@ -12,9 +12,6 @@ class Priority(models.IntegerChoices):
     URGENT = 3, 'Urgent'
 
 
-class Organization(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-
 class Task(models.Model):
     status = models.IntegerField(
         choices=Status.choices,
