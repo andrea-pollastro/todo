@@ -44,6 +44,15 @@
           <td>{{ task.updated_at }}</td>
         </tr>
         {% endfor %}
+        
+        <tr class="table">
+          <td colspan="{{ fields|length }}" class="text-center">
+            <a class="btn"> <!-- add href here -->
+              <i class="bi bi-plus-circle"></i> Add new task
+            </a>
+          </td>
+        </tr>
+        
       </tbody>
     </table>
 {% endblock %}
