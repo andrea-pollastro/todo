@@ -21,7 +21,7 @@
             {% endif %}
           </td>
           
-          <td>{{ task.title }}</td>
+          <td class="compress-cell">{{ task.title }}</td>
           
           <td class="text-center">
             {% if task.priority == 0 %}
@@ -38,7 +38,7 @@
           </td>
 
           <td>{{ task.due_date|default:"—" }}</td>
-          <td>{{ task.comment|default:"—" }}</td>
+          <td class="compress-cell">{{ task.comment|default:"—" }}</td>
           <td>{{ task.delivered_to|default:"—" }}</td>
           <td>{{ task.created_at }}</td>
           <td>{{ task.updated_at }}</td>
@@ -90,6 +90,23 @@
 {% endblock %}
 {% block css %}
     {{ block.super}} {# richiama il blocco del padre #}
+    <style>
+      td.compress-cell {
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      td.compress-cell:hover {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        background: #f8f9fa;
+        z-index: 1;
+        position: relative;
+      }
+    </style>
 {% endblock %}
 {% block javascript %}
     {{ block.super}} {# richiama il blocco del padre #}
