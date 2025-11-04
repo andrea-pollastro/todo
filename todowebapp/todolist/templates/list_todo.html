@@ -57,8 +57,8 @@
 
           <td
             {% if task.due_date %}
-              {% if task.due_date < today %}style="color:red; font-weight:500;"
-              {% elif task.due_date == today %}style="color:orange; font-weight:500;"
+              {% if task.due_date < today %}style="color:red"
+              {% elif task.due_date == today %}style="color:orange"
               {% endif %}
             {% endif %}
           >
