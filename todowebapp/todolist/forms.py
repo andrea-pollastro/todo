@@ -1,11 +1,12 @@
 from django import forms
-from .models import Task, Priority
+from .models import Task, Priority, Status
 
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ["title", "priority", "due_date", "comment", "delivered_to"]
+        fields = ["status", "title", "priority", "due_date", "comment", "delivered_to"]
         widgets = {
+            "status": forms.Select(choices=Status.choices, attrs={"class": "form-select"}),
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Task title"}),
             "priority": forms.Select(choices=Priority.choices, attrs={"class": "form-select"}),
             "due_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),

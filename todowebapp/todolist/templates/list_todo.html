@@ -1,8 +1,11 @@
 {% extends "master.html" %}
+<!-- {% load tz %}
+{% now "Y-m-d" as today %} -->
 {% block content %}
     <table class="table my-4">
       <thead>
         <tr>
+          <th scope="col"></th>
           {% for field in fields %}
           <th scope="col">{{ field }}</th>
           {% endfor %}
@@ -11,6 +14,21 @@
       <tbody>
         {% for task in tasks %}
         <tr>
+          <td>
+            <button type="button" class="btn btn-link p-0 border-0 text-decoration-none"
+                    title="Edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"
+                    data-action="{% url 'task_update' task.id %}"
+                    data-id="{{ task.id }}"
+                    data-title="{{ task.title|escape }}"
+                    data-status="{{ task.status }}"
+                    data-priority="{{ task.priority }}"
+                    data-due="{{ task.due_date|date:'Y-m-d'|default_if_none:'' }}"
+                    data-comment="{{ task.comment|default_if_none:''|escape }}"
+                    data-delivered_to="{{ task.delivered_to|default_if_none:''|escape }}">
+              <i class="bi bi-pencil" style="font-size:1rem; color:dodgerblue;"></i>
+            </button>
+          </td>
+
           <td class="text-center" style="color: dodgerblue">
             {% if task.status == 0 %}
             <i class="bi bi-square"></i>
@@ -37,7 +55,15 @@
             {% endif %}
           </td>
 
-          <td>{{ task.due_date|default:"—" }}</td>
+          <td
+            {% if task.due_date %}
+              {% if task.due_date < today %}style="color:red; font-weight:500;"
+              {% elif task.due_date == today %}style="color:orange; font-weight:500;"
+              {% endif %}
+            {% endif %}
+          >
+            {{ task.due_date|date:"Y-m-d"|default:"—" }}
+          </td>
           <td class="compress-cell">{{ task.comment|default:"—" }}</td>
           <td>{{ task.delivered_to|default:"—" }}</td>
           <td>{{ task.created_at }}</td>
@@ -56,7 +82,7 @@
       </tbody>
     </table>
 
-    <!-- Modal -->
+    <!-- New Task Modal -->
     <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border rounded p-2 bg-light" style="font-size: 0.9rem;">
@@ -66,7 +92,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
-          <form method="post">
+          <form method="post" action="{% url 'task_create' %}" autocomplete="off">
             <div class="modal-body">
               {% csrf_token %}
               {{ form.as_p }}
@@ -86,13 +112,40 @@
       </div>
     </div>
 
+    <!-- Edit Task Modal -->
+    <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border rounded p-2 bg-light" style="font-size: 0.9rem;">
+
+          <div class="modal-header">
+            <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <form id="editTaskForm" method="post" action="" autocomplete="off"> <!-- the action is defined in JS below -->
+            <div class="modal-body">
+              {% csrf_token %}
+              {{ form.as_p }}
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+              <button type="submit" class="btn btn-success btn-sm">
+                <i class="bi bi-check-circle"></i> Save
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                <i class="bi bi-x-circle"></i> Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
 {% endblock %}
 {% block css %}
     {{ block.super}} {# richiama il blocco del padre #}
     <style>
       td.compress-cell {
-        max-width: 300px;
+        max-width: 250px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -109,5 +162,40 @@
     </style>
 {% endblock %}
 {% block javascript %}
-    {{ block.super}} {# richiama il blocco del padre #}
+    {{ block.super}}
+    <script>
+    document.getElementById('editTaskModal').addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const id = button.getAttribute('data-id');
+
+      const form = document.getElementById('editTaskForm');
+      form.action = button.getAttribute('data-action');
+
+      const get = (attr) => (button.getAttribute(attr) || '').trim();
+
+      form.elements['title'].value        = get('data-title');
+      form.elements['priority'].value     = get('data-priority');
+      form.elements['status'].value = get('data-status');
+
+      const dueVal = get('data-due'); // must be 'YYYY-MM-DD' or ''
+      const dueInput = form.elements['due_date'];
+      if (dueInput) {
+        if (dueVal) {
+          dueInput.value = dueVal;
+
+          if (!dueInput.value) {
+            const [y,m,d] = dueVal.split('-').map(Number);
+            // valueAsDate wants 0-based months
+            const local = new Date(y, m - 1, d);
+            if (!isNaN(local)) dueInput.valueAsDate = local;
+          }
+        } else {
+          dueInput.value = '';
+        }
+      }
+
+      form.elements['comment'].value      = get('data-comment');
+      form.elements['delivered_to'].value = get('data-delivered_to');
+    });
+    </script>
 {% endblock %}
