@@ -64,11 +64,3 @@
   background-color: #f1e6ff;
   color: #6b3bb0;
 }
-
-
-
-
-.priority-select option[value="0"] { background-color: #dff3e3; color: #2e604a; }
-.priority-select option[value="1"] { background-color: #fef4d8; color: #8a6d1f; }
-.priority-select option[value="2"] { background-color: #fce5e5; color: #a13232; }
-.priority-select option[value="3"] { background-color: #f1e6ff; color: #6b3bb0; }
