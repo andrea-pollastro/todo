@@ -24,6 +24,7 @@
     <thead>
       <tr>
         <th scope="col"></th>
+        <th scope="col"></th>
         <th scope="col"><i class="bi bi-arrow-repeat" style="font-size:1.1rem"></i></th>
         <th scope="col" class="text-secondary"><i class="bi bi-type" style="font-size:1rem"></i> Task name</th>
         <th scope="col" class="text-secondary"><i class="bi bi-caret-down-square" style="font-size:1rem"></i> Priority</th>
@@ -36,6 +37,16 @@
     <tbody>
       {% for task in tasks %}
       <tr>
+        <td>
+          <form method="post" action="{% url 'task_delete' %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="pk" value="{{ task.id }}">
+            <button type="submit" class="btn btn-link btn-sm p-0 border-0"
+              onclick="return confirm('⚠️ This action is irreversible. Do you really want to delete this task?')">
+              <i class="bi bi-trash fs-7" style="font-size:1rem; color:red;"></i>
+            </button>
+          </form>
+        </td>
         <td>
           <button type="button" class="btn btn-link p-0 border-0 text-decoration-none"
                   title="Edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"
@@ -149,6 +160,7 @@
             {% csrf_token %}
             {{ form.as_p }}
           </div>
+
           <div class="modal-footer d-flex justify-content-center">
             <button type="submit" class="btn btn-success btn-sm">
               <i class="bi bi-check-circle"></i> Save
@@ -157,6 +169,7 @@
               <i class="bi bi-x-circle"></i> Cancel
             </button>
           </div>
+
         </form>
       </div>
     </div>

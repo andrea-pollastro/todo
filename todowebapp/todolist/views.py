@@ -36,3 +36,11 @@ def task_update(request, pk):
         if form.is_valid():
             form.save()
     return redirect('task_list')
+
+def task_delete(request):
+    if request.method != "POST":
+        return redirect("task_list")
+    pk = request.POST.get("pk")
+    task = get_object_or_404(Task, pk=pk)
+    task.delete()
+    return redirect("task_list")
