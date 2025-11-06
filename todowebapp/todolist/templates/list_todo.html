@@ -1,7 +1,8 @@
 {% extends "index.html" %}
 {% load static %}
+{% load tz %}
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center my-2">
+  <div class="d-flex justify-content-between align-items-center my-4">
     <h6 class="text-secondary mb-0" style="font-weight: 300; font-size: 1.7rem;">Tasks</h6>
 
     <form method="get" class="form-check form-switch m-0" action="{% url 'task_list' %}">
@@ -176,10 +177,12 @@
   </div>
 
 {% endblock %}
+
 {% block css %}
-  {{ block.super}} {# richiama il blocco del padre #}
+  {{ block.super }} {# richiama il blocco del padre #}
 {% endblock %}
+
 {% block javascript %}
-  {{ block.super}}
+  {{ block.super }}
   <script src="{% static 'todolist/js/edit-modal-fill.js' %}"></script>
 {% endblock %}

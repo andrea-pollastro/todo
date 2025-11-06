@@ -1,0 +1,137 @@
+:root{
+  --sb-bg: #1f2326;            /* sidebar background */
+  --sb-fg: #cfd4d9;            /* icon/text muted */
+  --sb-fg-strong: #e9ecef;     /* expanded text */
+  --sb-accent: #3b82f6;        /* active pill/indicator */
+  --sb-width: 60px;            /* collapsed width */
+  --sb-width-open: 240px;      /* expanded width */
+  --transition: 180ms ease;
+}
+
+/* reset body gap to stick the bar to the top */
+body { margin: 0; }
+
+/* -------- Sidebar -------- */
+.notion-sidebar{
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  width: var(--sb-width);
+  background: var(--sb-bg);
+  border-right: 1px solid rgba(255,255,255,.08);
+  padding: 8px 6px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: width var(--transition);
+  z-index: 1030;
+}
+
+/* nice subtle gradient edge like Notion */
+.notion-sidebar::after{
+  content:"";
+  position: absolute;
+  top:0; right:-1px; height:100%; width:12px;
+  pointer-events:none;
+  background: linear-gradient(to right, rgba(0,0,0,0.12), transparent);
+  opacity:.25;
+}
+
+.notion-sidebar:hover{
+  width: var(--sb-width-open);
+}
+
+/* list reset */
+.notion-sidebar ul{
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+
+/* item */
+.notion-sidebar li{
+  margin: 4px 0;
+}
+
+.notion-sidebar a{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  border-radius: 10px;
+  padding: 0 10px;
+  text-decoration: none;
+  color: var(--sb-fg);
+  transition: background var(--transition), color var(--transition), gap var(--transition);
+}
+
+/* icon size aligns with your table aesthetic */
+.notion-sidebar i{
+  font-size: 1.35rem;
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+/* label: hidden when collapsed, shown on hover */
+.notion-sidebar span{
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity var(--transition), transform var(--transition), color var(--transition);
+  color: var(--sb-fg);
+  font-size: 0.95rem;
+}
+
+/* when sidebar expands (via hover), reveal labels */
+.notion-sidebar:hover span{
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--sb-fg-strong);
+}
+
+/* hover */
+.notion-sidebar a:hover{
+  background: rgba(255,255,255,.06);
+  color: var(--sb-fg-strong);
+}
+
+/* active item */
+.notion-sidebar li.active a{
+  background: rgba(59,130,246,.14);
+  color: var(--sb-fg-strong);
+  position: relative;
+}
+.notion-sidebar li.active a::before{
+  content:"";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 20px;
+  border-radius: 999px;
+  background: var(--sb-accent);
+}
+
+/* -------- Content shift -------- */
+.page-wrap{
+  margin-left: var(--sb-width);
+  transition: margin-left var(--transition);
+}
+
+/* when sidebar expands, shift content too */
+.notion-sidebar:hover ~ .page-wrap{
+  margin-left: var(--sb-width-open);
+}
+
+/* -------- Responsive: small screens keep it narrow (no expand) -------- */
+@media (max-width: 992px){
+  .notion-sidebar:hover{
+    width: var(--sb-width);
+  }
+  .notion-sidebar:hover span{
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  .notion-sidebar:hover ~ .page-wrap{
+    margin-left: var(--sb-width);
+  }
+}

@@ -1,23 +1,20 @@
-<nav class="navbar bg-dark border-bottom border-body navbar-expand-lg" data-bs-theme="dark">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        
-        <li class="nav-item">
-          <a class="nav-link bi bi-list-check fs-2 py-0 px-3" aria-current="page" href="/"></a>
-        </li>
-        
-        <!-- These functionalities will be added in the future -->
-        <!-- <li class="nav-item">
-          <a class="nav-link bi bi-calendar-check fs-2 py-0 px-3" href="#"></a>
-        </li>  -->
-        
-        <!-- <li class="nav-item">
-          <a class="nav-link bi bi-shield-lock fs-2 py-0 px-3" href="#"></a>
-        </li>  -->
-       
-      
-      </ul>
-    </div>
-  </div>
+{% load static %}
+<nav class="notion-sidebar">
+  <ul>
+    <li class="active">
+      <a href="/">
+        <i class="bi bi-list-check"></i><span>Tasks</span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="bi bi-calendar-check"></i><span>Calendar</span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="bi bi-shield-lock"></i><span>Credentials</span>
+      </a>
+    </li>
+  </ul>
 </nav>
