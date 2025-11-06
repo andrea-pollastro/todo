@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'todolist.apps.TodolistConfig',
+    'calendarviewer.apps.CalendarviewerConfig',
     'django_bootstrap5'
 ]
 

@@ -5,7 +5,6 @@ from .models import Task
 from .forms import TaskForm
 
 def task_list(request):
-    # tasks = Task.objects.all().order_by('-priority')
     if request.GET.get('show_completed') == '1':
         tasks = Task.objects.all()
         view = 'all'
@@ -18,6 +17,7 @@ def task_list(request):
         'tasks': tasks,
         'view': view,
         'form': TaskForm(),
+        'active': 'tasks',
         'today': timezone.localdate(),
     }
     return render(request, 'list_todo.html', context)
