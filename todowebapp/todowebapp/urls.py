@@ -21,6 +21,5 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tasks/', include('todolist.urls')),
-    path('calendar/', include('calendarviewer.urls')),
     path('', RedirectView.as_view(url='/tasks/')),
 ]
